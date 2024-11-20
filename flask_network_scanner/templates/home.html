@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Network Scanner</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Network Scanner</h1>
+
+        <form method="post" class="my-4">
+            <div class="mb-3">
+                <label for="network_prefix" class="form-label">Network Prefix</label>
+                <input type="text" id="network_prefix" name="network_prefix" class="form-control" placeholder="e.g., 192.168.1">
+            </div>
+            <div class="mb-3">
+                <label for="ip_for_ports" class="form-label">IP for Port Scan</label>
+                <input type="text" id="ip_for_ports" name="ip_for_ports" class="form-control" placeholder="e.g., 192.168.1.1">
+            </div>
+            <button type="submit" class="btn btn-primary">Scan</button>
+        </form>
+
+        {% if error_message %}
+        <div class="alert alert-danger">
+            {{ error_message }}
+        </div>
+        {% endif %}
+
+        {% if devices %}
+        <h2>Device Scan Results</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>MAC Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                <tr>
+                    <td>{{ device['IP Address'] }}</td>
+                    <td>{{ device['MAC Address'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('download_file', filename=filename) }}" class="btn btn-success">Download CSV</a>
+        {% endif %}
+
+        {% if ports %}
+        <h2>Open Ports for {{ request.form.ip_for_ports }}</h2>
+        <ul class="list-group">
+            {% for port in ports %}
+            <li class="list-group-item">Port {{ port }} is open</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</body>
+</html>
